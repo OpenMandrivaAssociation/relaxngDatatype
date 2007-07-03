@@ -28,6 +28,8 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 
+%define gcj_support 1
+
 Name:           relaxngDatatype
 Version:        1.0
 Release:        %mkrel 3.1.1
@@ -40,11 +42,18 @@ Source0:        %{name}-%{version}.zip
 Patch0:         %{name}-compressjar.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 
-BuildArch:      noarch
 BuildRequires:  jpackage-utils >= 0:1.6
 BuildRequires:  ant >= 0:1.6
 Provides:       msv <= %{version}
 Obsoletes:      msv <= %{version}
+%if %{gcj_support}
+Requires(post): java-gcj-compat
+Requires(postun): java-gcj-compat
+BuildRequires:  java-gcj-compat-devel
+%else
+BuildArch:      noarch
+BuildRequires:  java-devel
+%endif
 
 %description
 RELAX NG is a public space for test cases and other ancillary software
@@ -81,13 +90,29 @@ for f in `find -name \*.html -o -name \*.css`; do
 done
 popd
 
+%if %{gcj_support}
+%{_bindir}/aot-compile-rpm
+%endif
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
+%if %{gcj_support}
+%post
+%{update_gcjdb}
+
+%postun
+%{clean_gcjdb}
+%endif
+
 %files
-%defattr(-,root,root,-)
+%defattr(0644,root,root,0755)
 %doc copying.txt
 %{_javadir}/*.jar
+%if %{gcj_support}
+%dir %{_libdir}/gcj/%{name}
+%attr(-,root,root) %{_libdir}/gcj/%{name}/*
+%endif
 
 %files javadoc
 %defattr(0644,root,root,0755)

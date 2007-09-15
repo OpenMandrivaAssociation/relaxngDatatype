@@ -32,7 +32,7 @@
 
 Name:           relaxngDatatype
 Version:        1.0
-Release:        %mkrel 3.1.1
+Release:        %mkrel 3.1.2
 Summary:        RELAX NG Datatype API
 
 Group:          Development/Java
@@ -47,8 +47,6 @@ BuildRequires:  ant >= 0:1.6
 Provides:       msv <= %{version}
 Obsoletes:      msv <= %{version}
 %if %{gcj_support}
-Requires(post): java-gcj-compat
-Requires(postun): java-gcj-compat
 BuildRequires:  java-gcj-compat-devel
 %else
 BuildArch:      noarch

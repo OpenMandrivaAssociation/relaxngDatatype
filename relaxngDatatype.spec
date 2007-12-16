@@ -32,7 +32,7 @@
 
 Name:           relaxngDatatype
 Version:        1.0
-Release:        %mkrel 3.1.2
+Release:        %mkrel 3.1.3
 Summary:        RELAX NG Datatype API
 
 Group:          Development/Java
@@ -42,7 +42,7 @@ Source0:        %{name}-%{version}.zip
 Patch0:         %{name}-compressjar.patch
 BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 
-BuildRequires:  jpackage-utils >= 0:1.6
+BuildRequires:  java-rpmbuild >= 0:1.6
 BuildRequires:  ant >= 0:1.6
 Provides:       msv <= %{version}
 Obsoletes:      msv <= %{version}

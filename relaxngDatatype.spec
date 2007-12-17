@@ -40,7 +40,6 @@ License:        BSD
 URL:            https://sourceforge.net/projects/relaxng
 Source0:        %{name}-%{version}.zip
 Patch0:         %{name}-compressjar.patch
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
 
 BuildRequires:  java-rpmbuild >= 0:1.6
 BuildRequires:  ant >= 0:1.6

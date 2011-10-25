@@ -28,11 +28,9 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 
-%define gcj_support 1
-
 Name:           relaxngDatatype
 Version:        1.0
-Release:        %mkrel 3.1.8
+Release:        6.3
 Summary:        RELAX NG Datatype API
 
 Group:          Development/Java
@@ -40,18 +38,14 @@ License:        BSD
 URL:            https://sourceforge.net/projects/relaxng
 Source0:        %{name}-%{version}.zip
 Patch0:         %{name}-compressjar.patch
-BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root
+BuildRoot:      %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-BuildRequires:  java-rpmbuild >= 0:1.6
+BuildArch:      noarch
+BuildRequires:  jpackage-utils >= 0:1.6
 BuildRequires:  ant >= 0:1.6
+Requires:       jpackage-utils
 Provides:       msv <= %{version}
 Obsoletes:      msv <= %{version}
-%if %{gcj_support}
-BuildRequires:  java-gcj-compat-devel
-%else
-BuildArch:      noarch
-BuildRequires:  java-devel
-%endif
 
 %description
 RELAX NG is a public space for test cases and other ancillary software
@@ -61,17 +55,18 @@ implementations.
 %package        javadoc
 Summary:        Javadoc for %{name}
 Group:          Development/Java
+Requires:       jpackage-utils
 
 %description    javadoc
 Javadoc for %{name}.
 
 %prep
-%setup -q -n %{name}-%{version}
+%setup -q
 %patch0 -p0
 
 %build
-%{ant} -Dbuild.sysclasspath=only 
-sed -i 's/\r$//g' copying.txt
+ant -Dbuild.sysclasspath=only
+sed -i 's/\r//g' copying.txt
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -84,34 +79,19 @@ cp -pr doc/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}
 ln -s %{name}-%{version} $RPM_BUILD_ROOT%{_javadocdir}/%{name}
 pushd $RPM_BUILD_ROOT%{_javadocdir}/%{name}
 for f in `find -name \*.html -o -name \*.css`; do
-    sed -i 's/\r$//g' $f > /dev/null
+    sed -i 's/\r//g' $f > /dev/null
 done
 popd
-
-%if %{gcj_support}
-%{_bindir}/aot-compile-rpm
-%endif
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%if %{gcj_support}
-%post
-%{update_gcjdb}
-
-%postun
-%{clean_gcjdb}
-%endif
-
 %files
-%defattr(0644,root,root,0755)
+%defattr(-,root,root,-)
 %doc copying.txt
 %{_javadir}/*.jar
-%if %{gcj_support}
-%dir %{_libdir}/gcj/%{name}
-%attr(-,root,root) %{_libdir}/gcj/%{name}/*
-%endif
 
 %files javadoc
-%defattr(0644,root,root,0755)
+%defattr(-,root,root,-)
 %doc %{_javadocdir}/%{name}*
+

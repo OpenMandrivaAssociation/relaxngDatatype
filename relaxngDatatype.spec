@@ -69,22 +69,22 @@ ant -Dbuild.sysclasspath=only
 sed -i 's/\r//g' copying.txt
 
 %install
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 install -Dpm 644 %{name}.jar \
-  $RPM_BUILD_ROOT%{_javadir}/%{name}-%{version}.jar
-ln -s %{name}-%{version}.jar $RPM_BUILD_ROOT%{_javadir}/%{name}.jar
+  %{buildroot}%{_javadir}/%{name}-%{version}.jar
+ln -s %{name}-%{version}.jar %{buildroot}%{_javadir}/%{name}.jar
 
-install -dm 755 $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}
-cp -pr doc/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}-%{version}
-ln -s %{name}-%{version} $RPM_BUILD_ROOT%{_javadocdir}/%{name}
-pushd $RPM_BUILD_ROOT%{_javadocdir}/%{name}
+install -dm 755 %{buildroot}%{_javadocdir}/%{name}-%{version}
+cp -pr doc/* %{buildroot}%{_javadocdir}/%{name}-%{version}
+ln -s %{name}-%{version} %{buildroot}%{_javadocdir}/%{name}
+pushd %{buildroot}%{_javadocdir}/%{name}
 for f in `find -name \*.html -o -name \*.css`; do
     sed -i 's/\r//g' $f > /dev/null
 done
 popd
 
 %clean
-rm -rf $RPM_BUILD_ROOT
+rm -rf %{buildroot}
 
 %files
 %defattr(-,root,root,-)

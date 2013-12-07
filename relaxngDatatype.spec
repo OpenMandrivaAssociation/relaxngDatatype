@@ -32,7 +32,7 @@
 
 Name:           relaxngDatatype
 Version:        1.0
-Release:        3.2.1
+Release:        3.2.2
 Summary:        RELAX NG Datatype API
 
 Group:          Development/Java

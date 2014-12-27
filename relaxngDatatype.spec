@@ -1,18 +1,17 @@
 %{?_javapackages_macros:%_javapackages_macros}
 Name:           relaxngDatatype
-Version:        1.0
-Release:        11.6%{?dist}
+Version:        2011.1
+Release:        1.1
 Summary:        RELAX NG Datatype API
+Group:		Development/Java
 License:        BSD
-URL:            https://sourceforge.net/projects/relaxng
-# wget http://netcologne.dl.sourceforge.net/project/relaxng/datatype%20%28java%29/Ver.%{version}/%{name}-%{version}.zip
-Source0:        http://netcologne.dl.sourceforge.net/project/relaxng/datatype%20%28java%29/Ver.%{version}/%{name}-%{version}.zip
-Source1:        http://repo1.maven.org/maven2/%{name}/%{name}/20020414/%{name}-20020414.pom
-Patch0:         %{name}-compressjar.patch
+URL:            https://github.com/java-schema-utilities/relaxng-datatype-java
+Source0:        https://github.com/java-schema-utilities/relaxng-datatype-java/archive/relaxngDatatype-%{version}.tar.gz
+# License is not available in the tarball, this copy fetched from the tarball on the old sourceforge.net site
+Source1:        copying.txt
 
 BuildArch:      noarch
-BuildRequires:  jpackage-utils >= 0:1.6
-BuildRequires:  ant >= 0:1.6
+BuildRequires:  maven-local
 
 %description
 RELAX NG is a public space for test cases and other ancillary software
@@ -23,41 +22,40 @@ implementations.
 Summary:        API documentation for %{name}
 
 %description    javadoc
-This package provides %{name}.
+This package provides %{summary}.
 
 %prep
-%setup -q
-%patch0 -p0
-sed -i s/// copying.txt doc/stylesheet.css
+%setup -q -n relaxng-datatype-java-relaxngDatatype-%{version}
+
+cp -p %{SOURCE1} .
+
+%pom_xpath_remove "pom:build/pom:extensions"
+
+# For compatibility
+%mvn_alias "com.github.relaxng:relaxngDatatype" "relaxngDatatype:relaxngDatatype"
 
 %build
-ant -Dbuild.sysclasspath=only
+%mvn_build
 
 %install
-install -d -m 755 $RPM_BUILD_ROOT%{_javadir}
-install -p -m 644 %{name}.jar $RPM_BUILD_ROOT%{_javadir}/
-
-install -d -m 755 $RPM_BUILD_ROOT%{_mavenpomdir}
-install -p -m 644 %{SOURCE1} $RPM_BUILD_ROOT%{_mavenpomdir}/JPP-%{name}.pom
-%add_maven_depmap
-
-install -d -m 755 $RPM_BUILD_ROOT%{_javadocdir}/%{name}
-cp -pr doc/* $RPM_BUILD_ROOT%{_javadocdir}/%{name}
-
-# Workaround for RPM bug (symlink was changed to directory).
-# TODO: Remove this in F-22
-%pretrans javadoc -p <lua>
-dir = "%{_javadocdir}/%{name}"
-dummy = posix.readlink(dir) and os.remove(dir)
+%mvn_install
 
 %files -f .mfiles
+%dir %{_javadir}/relaxngDatatype
 %doc copying.txt
 
-%files javadoc
+%files javadoc -f .mfiles-javadoc
 %doc copying.txt
-%doc %{_javadocdir}/%{name}
 
 %changelog
+* Tue Oct 21 2014 Mat Booth <mat.booth@redhat.com> - 2011.1-1
+- Update to version released from new project location rhbz#981275
+- Build/install with maven instead of ant
+- Drop old javadoc rpm bug workaround
+
+* Sun Jun 08 2014 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0-12.5
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_21_Mass_Rebuild
+
 * Sun Aug 04 2013 Fedora Release Engineering <rel-eng@lists.fedoraproject.org> - 1.0-11.5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_20_Mass_Rebuild
 

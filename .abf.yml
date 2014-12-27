@@ -1,2 +1,4 @@
-sources:
+removed_sources:
   relaxngDatatype-1.0.zip: 9610f206b29a28f8d35a5125244c786c335080f7
+sources:
+  relaxngDatatype-2011.1.tar.gz: 13d173356848def46d7ffd54399dc359b47e9720

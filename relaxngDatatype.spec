@@ -1,7 +1,7 @@
 %{?_javapackages_macros:%_javapackages_macros}
 Name:           relaxngDatatype
 Version:        2011.1
-Release:        1.1
+Release:        1.2
 Summary:        RELAX NG Datatype API
 Group:		Development/Java
 License:        BSD
